@@ -1,0 +1,23 @@
+.loginBody {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to right, #880001 0%, #b50018 39%, #b50018 65%, #880001 100%, #880001 100%, #880001 100%);
+  height: 100vh;
+  align-items: center;
+  justify-content: center; }
+
+.logo {
+  margin: 0 auto; }
+
+.wrapInput {
+  padding: 10px; }
+
+.formMessage {
+  color: #FF0 !important;
+  text-align: center;
+  width: 100%; }
+
+.formLogin {
+  padding-top: 25px;
+  align-items: center;
+  text-align: center; }
