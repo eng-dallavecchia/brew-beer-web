@@ -1,13 +1,16 @@
 .loginBody {
   display: flex;
   flex-direction: column;
-  background: linear-gradient(to right, #880001 0%, #b50018 39%, #b50018 65%, #880001 100%, #880001 100%, #880001 100%);
+  background: linear-gradient(to right, #c93b0e, #ff7043);
   height: 100vh;
   align-items: center;
   justify-content: center; }
 
 .logo {
-  margin: 0 auto; }
+  margin: 0 auto;
+  width: 200px
+
+   }
 
 .wrapInput {
   padding: 10px; }

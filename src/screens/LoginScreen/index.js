@@ -4,6 +4,8 @@ import axios from "axios";
 import { withStyles } from "@material-ui/core/styles";
 import MaskedInput from "react-text-mask";
 import CPF from "cpf";
+import Logo from "assets/images/logo.png";
+
 import "./index.css";
 
 const styles = theme => ({
@@ -26,34 +28,6 @@ const styles = theme => ({
   error: {},
   focused: {}
 });
-
-const CPFMask = props => {
-  const { inputRef, ...other } = props;
-
-  return (
-    <MaskedInput
-      {...other}
-      ref={inputRef}
-      mask={[
-        /[0-9]/,
-        /[0-9]/,
-        /[0-9]/,
-        ".",
-        /[0-9]/,
-        /[0-9]/,
-        /[0-9]/,
-        ".",
-        /[0-9]/,
-        /[0-9]/,
-        /[0-9]/,
-        "-",
-        /[0-9]/,
-        /[0-9]/
-      ]}
-      placeholderChar={"\u2000"}
-    />
-  );
-};
 
 class Login extends Component {
   constructor(props) {
@@ -98,14 +72,22 @@ class Login extends Component {
   render() {
     return (
       <div className="loginBody">
-        <form onSubmit={e => { this.handleLogin(e); }} >
+        <img className="logo" src={Logo} alt="" />
+
+        <form
+          onSubmit={e => {
+            this.handleLogin(e);
+          }}
+        >
           <div className="formLogin">
-          <Typography className="formMessage">{this.state.message}</Typography>
+            <Typography className="formMessage">
+              {this.state.message}
+            </Typography>
             <div className="wrapInput">
               <TextField
                 id="username"
                 type="text"
-                label="CPF"
+                label="Usuário"
                 onChange={event =>
                   this.setState({
                     username: event.target.value
@@ -113,7 +95,6 @@ class Login extends Component {
                 }
                 value={this.state.username}
                 InputProps={{
-                  inputComponent: CPFMask,
                   style: { color: "white" },
                   classes: {
                     input: this.props.classes.input,
