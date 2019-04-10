@@ -51,7 +51,10 @@ class calibrationScreen extends Component {
     value = value.replace(",", ".");
 
     if (value) {
-      await instance().post(`/calibration/${value}/100`);
+      await instance().post(`/calibration`, {
+        sensorId: "35",
+        calibrationNumber: value
+      });
 
       alert("Sensor 100 calibrado com sucesso!");
     } else {
