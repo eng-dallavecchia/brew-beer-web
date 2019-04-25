@@ -1,23 +1,18 @@
 import React, { Component } from "react";
 import {
   Grid,
-  CircularProgress,
   TextField,
   Typography,
   Button
 } from "@material-ui/core";
-import ChartLine from "components/ChartLine";
-import ChartBarHorizontal from "components/ChartBarHorizontal";
-import ChartDoughnut from "components/ChartDoughnut";
-import CardKeyValue from "components/CardKeyValue";
-import { AttachMoney, Build } from "@material-ui/icons";
+import { Build } from "@material-ui/icons";
 import { compose } from "recompose";
 import { withStyles } from "@material-ui/core/styles";
 import { withUIContext } from "contexts/UIContext";
 import { withLoggedContext } from "../../contexts/LoggedContext";
 import { instance } from "config/axios";
 
-const styles = theme => ({
+const styles = {
   gridStyle: {
     display: "flex",
     justifyContent: "center"
@@ -36,7 +31,7 @@ const styles = theme => ({
       }
     }
   }
-});
+};
 
 class calibrationScreen extends Component {
   state = {

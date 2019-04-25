@@ -2,29 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
+import { Toolbar, AppBar, Typography } from "@material-ui/core";
 import {
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Toolbar,
-  AppBar,
-  Drawer,
-  MenuItem,
-  Menu,
-  Typography,
-  Divider
-} from "@material-ui/core";
-import {
-  ExitToApp,
   Menu as MenuIcon,
-  ChevronRight,
-  ChevronLeft,
   Home,
   Assessment,
-  LocationCity,
-  Build
+  Build,
+  LocationCity
 } from "@material-ui/icons";
 import browserRouterService from "routes/browserRouterService";
 import { withUIContext } from "contexts/UIContext";
@@ -37,6 +21,24 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import IconButton from "@material-ui/core/IconButton";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+
+function TabContainer(props) {
+  return (
+    <Typography component="div" style={{ padding: 8 * 3 }}>
+      {props.children}
+    </Typography>
+  );
+}
+
+TabContainer.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
 const drawerWidth = 240;
 
@@ -48,6 +50,11 @@ const styles = theme => ({
     overflow: "hidden",
     position: "relative",
     display: "flex"
+  },
+  root2: {
+    flexGrow: 1,
+    width: "100%",
+    backgroundColor: theme.palette.background.paper
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -102,6 +109,7 @@ const styles = theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3,
+    paddingTop: 80,
     marginTop: 85
   },
   logo: {
@@ -140,22 +148,33 @@ const styles = theme => ({
   },
   logoutIcon: {
     color: theme.palette.primary.dark
+  },
+  contentTabs: {
+    justifyContent: "space-around"
+  },
+  profileIcon: {
+    marginRight: 24
+  },
+  colorBranch: {
+    color: "white",
+    fontFamily: "Helvetica",
+    fontSize: 16,
+    marginRight: 16
   }
 });
 
 class MiniDrawer extends React.Component {
   state = {
     open: false,
-    isLogoutModalOpen: false
+    isLogoutModalOpen: false,
+    anchorEl: null,
+    value: 0
   };
 
   constructor(props) {
     super(props);
     this.renderNavbar = this.renderNavbar.bind(this);
-    this.renderDrawer = this.renderDrawer.bind(this);
-    this.renderMenu = this.renderMenu.bind(this);
-    this.renderChangeFranchise = this.renderChangeFranchise.bind(this);
-    this.handleFranchiseClick = this.handleFranchiseClick.bind(this);
+    this.handleBranchClick = this.handleBranchClick.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.handleDrawerClick = this.handleDrawerClick.bind(this);
   }
@@ -173,128 +192,39 @@ class MiniDrawer extends React.Component {
     this.setState({ open: false });
   };
 
-  renderDrawer() {
-    const { classes, theme } = this.props;
-    const { windowWidth } = this.props.uiContext;
-    return (
-      <Drawer
-        variant={windowWidth > 600 ? "permanent" : "temporary"}
-        classes={{
-          paper: classNames(
-            classes.drawerPaper,
-            !this.state.open && classes.drawerPaperClose
-          )
-        }}
-        open={this.state.open}
-      >
-        <div className={classes.toolbar}>
-          <IconButton onClick={this.handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRight nativeColor="white" />
-            ) : (
-              <ChevronLeft nativeColor="white" />
-            )}
-          </IconButton>
-        </div>
-        {this.renderMenu()}
-      </Drawer>
-    );
-  }
-
-  renderMenu() {
-    const { pathname } = this.props.location;
+  renderTab() {
     const { classes } = this.props;
+    const { value } = this.state;
     return (
-      <List className={this.props.classes.drawerList}>
-        <ListItem
-          className={
-            pathname === "/brew/main" ? classes.activeDrawerRoute : null
-          }
-          button
-          onClick={() => this.handleDrawerClick("/brew/main")}
-        >
-          <ListItemIcon>
-            <Home
-              className={
-                pathname === "/brew/main" ? classes.activeDrawerIcon : null
-              }
-            />
-          </ListItemIcon>
-          <ListItemText
-            classes={{
-              primary:
-                pathname === "/brew/main" ? classes.activeDrawerText : null
-            }}
+      <div className={classes.root2}>
+        <AppBar position="static" color="default">
+          <Tabs
+            classes={{ flexContainer: classes.contentTabs }}
+            value={value}
+            onChange={this.handleChange}
+            variant="scrollable"
+            scrollButtons="on"
+            indicatorColor="primary"
+            textColor="primary"
           >
-            Principal
-          </ListItemText>
-        </ListItem>
-
-        <ListItem
-          className={
-            pathname === "/brew/graph" ? classes.activeDrawerRoute : null
-          }
-          button
-          onClick={() => this.handleDrawerClick("/brew/graph")}
-        >
-          <ListItemIcon>
-            <Assessment
-              className={
-                pathname === "/brew/graph" ? classes.activeDrawerIcon : null
-              }
+            <Tab
+              onClick={() => this.handleDrawerClick("/brew/main")}
+              label="Principal"
+              icon={<Home />}
             />
-          </ListItemIcon>
-          <ListItemText
-            classes={{
-              primary:
-                pathname === "/brew/graph" ? classes.activeDrawerText : null
-            }}
-          >
-            Gráficos
-          </ListItemText>
-        </ListItem>
-
-        <ListItem
-          className={
-            pathname === "/brew/calibration" ? classes.activeDrawerRoute : null
-          }
-          button
-          onClick={() => this.handleDrawerClick("/brew/calibration")}
-        >
-          <ListItemIcon>
-            <Build
-              className={
-                pathname === "/brew/calibration"
-                  ? classes.activeDrawerIcon
-                  : null
-              }
+            <Tab
+              onClick={() => this.handleDrawerClick("/brew/graph")}
+              label="Gráficos"
+              icon={<Assessment />}
             />
-          </ListItemIcon>
-          <ListItemText
-            classes={{
-              primary:
-                pathname === "/brew/calibration"
-                  ? classes.activeDrawerText
-                  : null
-            }}
-          >
-            Calibragem
-          </ListItemText>
-        </ListItem>
-
-        <Divider />
-        <ListItem
-          button
-          onClick={() => this.setState({ isLogoutModalOpen: true })}
-        >
-          <ListItemIcon>
-            <ExitToApp className={classes.logoutIcon} />
-          </ListItemIcon>
-          <ListItemText classes={{ primary: classes.logoutIcon }}>
-            Sair
-          </ListItemText>
-        </ListItem>
-      </List>
+            <Tab
+              onClick={() => this.handleDrawerClick("/brew/calibration")}
+              label="Calibração"
+              icon={<Build />}
+            />
+          </Tabs>
+        </AppBar>
+      </div>
     );
   }
 
@@ -306,7 +236,7 @@ class MiniDrawer extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-  handleFranchiseClick = companyBranch => {
+  handleBranchClick = companyBranch => {
     this.props.loggedContext.setCompany(companyBranch);
     this.setState({ anchorEl: null });
   };
@@ -316,7 +246,11 @@ class MiniDrawer extends React.Component {
     window.location.replace("/");
   };
 
-  renderChangeFranchise() {
+  handleMenuEl = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  renderChangeBranch() {
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
     return (
@@ -346,7 +280,7 @@ class MiniDrawer extends React.Component {
           {this.props.loggedContext.companyBranches.map(item => (
             <MenuItem
               key={item.id}
-              onClick={() => this.handleFranchiseClick(item)}
+              onClick={() => this.handleBranchClick(item)}
             >
               {item.city}
             </MenuItem>
@@ -358,6 +292,8 @@ class MiniDrawer extends React.Component {
 
   renderNavbar() {
     const { classes } = this.props;
+    const { anchorEl } = this.state;
+    const Open = Boolean(anchorEl);
     return (
       <AppBar
         position="absolute"
@@ -367,39 +303,57 @@ class MiniDrawer extends React.Component {
         )}
       >
         <Toolbar className={classes.toolbar} disableGutters={!this.state.open}>
-          <IconButton
-            color="inherit"
-            aria-label="Open drawer"
-            onClick={this.handleDrawerOpen}
-            className={classNames(
-              classes.menuButton,
-              this.state.open && classes.hide
-            )}
-          >
-            <MenuIcon nativeColor="white" />
-          </IconButton>
           <img
             className={classes.logo}
             // src={require("assets/images/logo.png")}
             alt=""
           />
           <div className={classes.space} />
-          {this.renderChangeFranchise()}
+          {/* {this.renderChangeBranch()} */}
+
+          <div className={classes.colorBranch}>
+            {this.props.loggedContext.companyBranche.city}
+          </div>
+
+          <div className={classes.profileIcon}>
+            <IconButton
+              aria-owns={Open ? "menu-appbar" : undefined}
+              aria-haspopup="true"
+              onClick={this.handleMenuEl}
+            >
+              <AccountCircle nativeColor="white" />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              open={Open}
+              onClose={this.handleCloseEl}
+            >
+              <MenuItem onClick={this.handleLogout}>Sair</MenuItem>
+            </Menu>
+          </div>
         </Toolbar>
-        <Typography className={classes.franchise}>
-          {this.props.loggedContext.companyBranche.city}
-        </Typography>
+        {this.renderTab()}
       </AppBar>
     );
   }
 
+  handleChange = (event, value) => {
+    this.setState({ value });
+  };
+  handleCloseEl = () => {
+    this.setState({ anchorEl: null });
+  };
+
   render() {
     const { classes } = this.props;
+
+    console.log(this.props.history.location.pathname);
+
     return (
       <React.Fragment>
         <div className={classes.root}>
           {this.renderNavbar()}
-          {this.renderDrawer()}
           <main className={classes.content}>{this.props.children}</main>
         </div>
         <Dialog

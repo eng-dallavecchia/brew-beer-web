@@ -1,13 +1,8 @@
 import React, { Component } from "react";
 import { Grid, CircularProgress } from "@material-ui/core";
 import ChartLine from "components/ChartLine";
-import ChartBarHorizontal from "components/ChartBarHorizontal";
-import ChartDoughnut from "components/ChartDoughnut";
 import CardKeyValue from "components/CardKeyValue";
 import { AttachMoney } from "@material-ui/icons";
-import { FolderShared } from "@material-ui/icons";
-import { LocalAtm } from "@material-ui/icons";
-import { InsertChart } from "@material-ui/icons";
 import { instance } from "config/axios";
 import { compose } from "recompose";
 import { withStyles } from "@material-ui/core/styles";
@@ -15,7 +10,6 @@ import { withUIContext } from "contexts/UIContext";
 import { withLoggedContext } from "../../contexts/LoggedContext";
 import { LocalDrink } from "@material-ui/icons";
 import { toBRL } from "util/currency";
-import { colors } from "util/styles/color";
 import moment from "moment";
 
 const styles = theme => ({
@@ -65,9 +59,9 @@ class MainScreen extends Component {
 
     let literTotalMonth = totalMonth.data.data.litros;
 
-    let revenueTotalDay = totalDay.data.data.faturamento;
+    let revenueTotalDay = totalDay.data.data.faturamento || 0;
 
-    let literTotalDay = totalDay.data.data.litros;
+    let literTotalDay = totalDay.data.data.litros || 0;
 
     this.setState({
       loading: false,
