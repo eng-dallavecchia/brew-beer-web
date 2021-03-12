@@ -43,7 +43,7 @@
     "react-chartjs": "^1.2.0",
     "react-chartjs-2": "^2.7.2",
     "react-data-fetching": "^0.2.2",
-    "react-dev-utils": "^5.0.1",
+    "react-dev-utils": "^11.0.4",
     "react-dom": "^16.4.1",
     "react-input-mask": "^2.0.4",
     "react-router": "^4.3.1",
